@@ -1,12 +1,12 @@
-// src/app/layout.tsx
-import './globals.css';  
-import { ThemeProvider } from '../app/context/ThemeContext'; // adjust path if needed
-import { AuthProvider } from '../app/context/AuthContext';
-import AppShell from './components/AppShell';
+// app/layout.tsx
+import "./globals.css";
+import { AuthProvider } from "./context/AuthContext";
+import { ThemeProvider } from "./context/ThemeContext";
+import { Toaster } from "react-hot-toast";
 
 export const metadata = {
-  title: 'My App',
-  description: 'My Tailwind CSS App',
+  title: "Slooze Commodities System",
+  description: "Manage commodities with role-based control",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -15,7 +15,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <ThemeProvider>
           <AuthProvider>
-            <AppShell>{children}</AppShell>
+            <Toaster position="top-center" />
+            {children}
           </AuthProvider>
         </ThemeProvider>
       </body>

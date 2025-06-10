@@ -1,36 +1,22 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 
-export function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl
-  const token = request.cookies.get('token')?.value
-  const role = request.cookies.get('role')?.value
+export function middleware(req: NextRequest) {
+  const token = req.cookies.get("token")?.value;
+  const role = req.cookies.get("role")?.value;
+  const pathname = req.nextUrl.pathname;
 
-  // Public routes
-  const publicPaths = ['/login']
-
-  // If user is already logged in, redirect away from login
-  if (pathname === '/login' && token) {
-    return NextResponse.redirect(new URL('/dashboard', request.url))
+  if (!token) {
+    return NextResponse.redirect(new URL("/login", req.url));
   }
 
-  // If accessing a protected route and not logged in
-  if (!token && !publicPaths.includes(pathname)) {
-    return NextResponse.redirect(new URL('/login', request.url))
+  if (pathname.startsWith("/dashboard") && role !== "Manager") {
+    return NextResponse.redirect(new URL("/products", req.url));
   }
 
-  // Role-based restriction example: storekeeper blocked from dashboard
-  if (pathname.startsWith('/dashboard') && role !== 'manager') {
-    return NextResponse.redirect(new URL('/products', request.url))
-  }
-
-  return NextResponse.next()
+  return NextResponse.next();
 }
 
 export const config = {
-  matcher: [
-    '/dashboard/:path*',
-    '/products/:path*',
-    '/login',
-    '/',
-  ],
-}
+  matcher: ["/dashboard", "/products"],
+};
