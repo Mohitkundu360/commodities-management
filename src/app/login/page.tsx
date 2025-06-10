@@ -27,9 +27,8 @@ export default function LoginPage() {
     e.preventDefault();
     setError("");
     try {
-      // Custom login function defined in context (already sets role + user)
       await login(email, password);
-    } catch (err: any) {
+    } catch {
       setError("Invalid email or password");
     }
   };
